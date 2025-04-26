@@ -62,14 +62,14 @@ const Navbar = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <nav className="h-20 flex border-b justify-between font-medium bg-white">
+    <nav className="h-16 flex border-b justify-between font-medium bg-white">
       <NavbarSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} item={navbarItems} />
-      <Link href={"/"} className="pl-6 flex items-center">
-        <span className={cn("text-5xl font-semibold", poppins.className)}>
+      <Link href={"/"} className="pl-4 flex items-center">
+        <span className={cn("text-3xl font-semibold", poppins.className)}>
           funroad
         </span>
       </Link>
-      <div className="items-center gap-4 hidden lg:flex pr-6">
+      <div className="items-center gap-3 hidden lg:flex pr-4">
         {navbarItems.map((item) => (
           <NavbarItem
             key={item.href}
@@ -81,11 +81,11 @@ const Navbar = () => {
         ))}
       </div>
       <div className="hidden lg:flex">
-        <Button variant={'secondary'} className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white hover:bg-pink-400 transition-colors text-lg">
+        <Button variant={'secondary'} className="border-l border-t-0 border-b-0 border-r-0 px-8 h-full rounded-none bg-white hover:bg-pink-400 transition-colors text-base">
             <Link href={'/sign-in'}>
             Log in</Link>
         </Button>
-        <Button variant={'default'} className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full bg-black  rounded-none text-white hover:text-black hover:bg-pink-400 transition-colors text-lg">
+        <Button variant={'default'} className="border-l border-t-0 border-b-0 border-r-0 px-8 h-full bg-black  rounded-none text-white hover:text-black hover:bg-pink-400 transition-colors text-base">
           <Link href={'/sign-up'}>
           Start selling  </Link>
         </Button>
