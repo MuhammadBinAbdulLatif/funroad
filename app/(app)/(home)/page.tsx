@@ -10,8 +10,6 @@ export default async function Home() {
     collection: 'categories',
     depth: 1,
     pagination: false,
-
-    limit: 10,
     where: {
       parent: {
         exists: false,

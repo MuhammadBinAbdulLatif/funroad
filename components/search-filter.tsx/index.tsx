@@ -1,9 +1,10 @@
 import React from 'react'
 import SearchInput from './search-input'
 import Categories from './Categories'
+import { modifiedCategory } from '@/types/CustomCategory'
 
 type Props = {
-  data: any
+  data: modifiedCategory[]
 }
 const SearchFilter = ({data}: Props) => {
   return (
