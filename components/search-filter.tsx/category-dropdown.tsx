@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useDropdownPosition } from './use-dropdown-position';
 import SubCategoryMenu from './sub-category-menu';
 import { modifiedCategory } from '@/types/CustomCategory';
+import Link from 'next/link';
 
 type Props = {
     category: modifiedCategory;
@@ -30,7 +31,10 @@ const CategoryDropDown = ({category,isActive,isNavigationHovered}: Props) => {
     <div className='relative'>
 
     <Button variant={'elevated'} className={cn('h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary hover:text-black', isActive && !isNavigationHovered && 'bg-white border-primary', isOpen && 'bg-white border-primary shadow-[4px_4px_0px_0px] -translate-x-[4px] -translate-y-[4px]' ) }>
+
+    <Link href={`/${category.slug === 'all' ? '': category.slug}`} className='flex items-center'>
     {category.name}
+    </Link>
    </Button>
    </div>
    

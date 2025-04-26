@@ -14,7 +14,8 @@ export default async function Home() {
       parent: {
         exists: false,
       }
-    }
+    }, 
+    sort: 'name'
    })
    const formattedData = data.docs.map((doc)=> (
     {
