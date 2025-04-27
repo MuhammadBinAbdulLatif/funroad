@@ -36,7 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "components/search-filter"  ],
   "exclude": [
     "node_modules"
   ]

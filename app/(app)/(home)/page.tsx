@@ -1,20 +1,13 @@
-import SearchFilter, { SearchFilterLoading } from '@/components/search-filter.tsx';
-import { getQueryClient, trpc } from '@/trpc/server';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { Suspense } from 'react';
+'use client'
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const queryClient = getQueryClient()
-  void queryClient.prefetchQuery(trpc.categories.getMany.queryOptions())
+  const trpc = useTRPC()
+  const {data} = useQuery(trpc.auth.session.queryOptions())
   return (
     <div className='flex flex-col'>
-      <div className='w-screen'>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <Suspense fallback={<SearchFilterLoading />}>
-      <SearchFilter  />
-      </Suspense>
-      </HydrationBoundary>
-      </div>
+      {JSON.stringify(data,null,2)}
     </div>
   );
 }
