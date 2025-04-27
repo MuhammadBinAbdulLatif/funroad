@@ -11,10 +11,19 @@ const ProductList = ({category}:Props) => {
     const trpc  = useTRPC()
     const {data} = useSuspenseQuery(trpc.products.getMany.queryOptions({category}))
   return (
-    <div>
-        {JSON.stringify(data, null, 2
-
-        )}
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 x:grid-cols-4 2xl:grid-cols-4 gap-4'>
+        {data?.docs.map((product)=> (
+            <div key={product.id} className='border rounded-md bg-white' >
+                <h2 className='text-lg p-2 font-medium'>
+                    {product.name}
+                </h2>
+                <div className='flex items-center justify-center'>
+                <h2 className='font-medium text-green-400 p-2'>
+                    ${product.price}
+                </h2>
+                </div>
+            </div>
+        ))}
     </div>
   )
 }
