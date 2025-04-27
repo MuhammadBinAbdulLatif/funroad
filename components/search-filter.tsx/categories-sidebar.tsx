@@ -8,7 +8,7 @@ import {  useRouter } from 'next/navigation';
 type Props = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    data: modifiedCategory[]
+    data?: modifiedCategory[]
 }
 
 const CategoriesSidebar = ({onOpenChange,open,data}: Props) => {

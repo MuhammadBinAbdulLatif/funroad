@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 
 type Props = {
     disabled?: boolean;
-    data: modifiedCategory[]
+    data?: modifiedCategory[]
 }
 
 const SearchInput = ({disabled, data}: Props) => {
