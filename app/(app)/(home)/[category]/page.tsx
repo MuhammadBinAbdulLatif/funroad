@@ -1,4 +1,7 @@
-import React from 'react'
+import ProductList, { ProductListSkeleton } from '@/components/products/product-list'
+import {  getQueryClient, trpc } from '@/trpc/server'
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query'
+import React, { Suspense } from 'react'
 
 type Props = {
     params: Promise<{
@@ -8,8 +11,14 @@ type Props = {
 
 const page = async ({params}: Props) => {
     const {category} = await params;
+    const queryClient = getQueryClient()
+    void queryClient.prefetchQuery(trpc.products.getMany.queryOptions({category}))
   return (
-    <div>{category}</div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Suspense fallback={<ProductListSkeleton />}>
+      <ProductList category={category} />
+      </Suspense>
+    </HydrationBoundary>
   )
 }
 
