@@ -48,7 +48,7 @@ const CategoriesSidebar = ({onOpenChange,open,data}: Props) => {
                 Categories
             </SheetTitle>
             </SheetHeader>
-            <ScrollArea>
+            <ScrollArea className="h-full">
                 {parentCategories && (
                     <button
                         onClick={() => {

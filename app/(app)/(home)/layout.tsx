@@ -21,8 +21,8 @@ const layout = ({children}: Props) => {
   return (
     <div className='flex flex-col min-h-screen'>
         <Navbar />
-        <div className='flex-1 bg-[#f4f4f0] py-4'>
-        <div className='w-screen'>
+        <div className='flex-1 bg-[#f4f4f0] '>
+        <div className='w-screen '>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Suspense fallback={<SearchFilterLoading />}>
       <SearchFilter  />

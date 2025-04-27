@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
 import { ListFilterIcon } from 'lucide-react'
 import CategoriesSidebar from './categories-sidebar'
+import { useParams } from 'next/navigation'
 
 
 type Props = {
@@ -13,13 +14,15 @@ type Props = {
 }
 
 const Categories = ({data}: Props) => {
+  const params = useParams()
   const containerRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
   const ViewAllRef = useRef<HTMLDivElement>(null)
   const [visibleContent, setVisibleContent] =  useState(data.length)
   const [isAnyHovered, setIsAnyHovered] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const activeCategory = 'all'
+  const categoryPrams = params.category as string | undefined
+  const activeCategory = categoryPrams || 'all'
   const activeCategoryIndex = data.findIndex((category) => category.slug === activeCategory)
   const isActiveCategoryHidden = activeCategoryIndex >= visibleContent && activeCategoryIndex !== -1
   useEffect(() => {
