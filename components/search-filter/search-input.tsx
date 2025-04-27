@@ -29,12 +29,12 @@ const SearchInput = ({disabled, data}: Props) => {
           <ListFilterIcon className='size-4' />
         </Button>
         {session.data?.user && (
-          <Button asChild variant={'elevated'}>
-            <Link href={'/library'} className='flex items-center gap-2'>
-            <BookmarkCheckIcon className='mr-2' />
-            Library
-            </Link>
-          </Button> 
+          <Link href={'/library'}>
+            <Button variant={'elevated'} className='flex items-center gap-2'>
+              <BookmarkCheckIcon className='mr-2' />
+              Library
+            </Button>
+          </Link>
         )}
     </div>
   )
