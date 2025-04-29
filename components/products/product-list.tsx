@@ -9,7 +9,7 @@ import { Button } from '../ui/button'
 import { InboxIcon } from 'lucide-react'
 
 type Props = {
-    category: string | undefined
+    category?: string | undefined
 }
 const ProductList = ({category}:Props) => {
     const trpc  = useTRPC()

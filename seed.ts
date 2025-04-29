@@ -96,5 +96,34 @@ const seed = async () => {
     }
 }
 
-await seedTags()
+const createAdmin = async () => {
+  const payload = await getPayload({config})
+  const admin = await payload.create({
+    collection: 'tenants',
+    data: {
+      name: 'admin',
+      slug: 'admin',
+      stripeAccountId: 'test',
+      stripeDetailsSubmitted: false
+    }
+  })
+ await payload.update({
+    collection: 'users',
+    data: {
+      tenants: [
+        {
+          id: admin.id,
+          tenant: admin
+        }
+      ]
+    },
+    where: {
+      email: {
+        equals: 'helloworld@demo.com'
+      }
+    }
+  });
+  
+}
+await createAdmin()
 process.exit(0)

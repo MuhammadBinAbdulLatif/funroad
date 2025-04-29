@@ -22,11 +22,13 @@ export const Products: CollectionConfig = {
             name: 'category',
             type: 'relationship',
             relationTo: 'categories',
-            hasMany: false
+            hasMany: false,
+            required: true
         }, {
             name: 'image',
             type: 'upload',
-            relationTo: 'media'
+            relationTo: 'media',
+            required: true
         }, {
             name: 'refundPolicy',
             type: 'select',
@@ -36,7 +38,8 @@ export const Products: CollectionConfig = {
             name: 'tags',
             type: 'relationship',
             relationTo: 'tags',
-            hasMany: false
+            hasMany: true,
+            required: true
         }
-    ]
+    ],
 }
