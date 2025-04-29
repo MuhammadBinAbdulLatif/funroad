@@ -15,7 +15,7 @@ export const metadata: Metadata = {
       "Learn about funroad, the all-in-one platform for creators to build, sell, and grow their digital product businesses.",
   }
   
-const layout = ({children}: Props) => {
+const layout = async ({children}: Props) => {
   const queryClient = getQueryClient()
   void queryClient.prefetchQuery(trpc.categories.getMany.queryOptions())
   return (

@@ -1,6 +1,8 @@
+import { generateTenantUrl } from '@/lib/utils';
 import { StarIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import  { useRouter } from 'next/navigation';
 import React from 'react'
 
 type Props = {
@@ -15,6 +17,12 @@ type Props = {
 }
 
 const ProductCard = ({authorUsername,id,name,price,reviewCount,reviewRating,authorImageUrl,imageUrl}: Props) => {
+    const router = useRouter()
+    const handleUserClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        router.push(generateTenantUrl(authorUsername))
+    }
   return (
     <Link href={`/${id}`}>
     <div className='border hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md bg-white overflow-hidden h-full flex flex-col'>
@@ -26,7 +34,7 @@ const ProductCard = ({authorUsername,id,name,price,reviewCount,reviewRating,auth
                 {name}
             </h2>
             {/* TODO: Redirect to user shop */}
-            <div className='flex items-center gap-2' onClick={()=> {} }>
+            <div className='flex items-center gap-2' onClick={handleUserClick}>
                 {authorImageUrl && (
                     <Image alt={authorUsername} src={authorImageUrl} width={16} height={16} className='rounded-full border shrink-0 size-[16px]' />
                     
