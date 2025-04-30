@@ -3,27 +3,54 @@
 import { useCart } from "@/hooks/use-cart";
 import { generateTenantUrl } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import {toast} from 'sonner'
 import CheckoutItem from "./checkout-item";
 import { InboxIcon, Loader2 } from "lucide-react";
 import CheckoutSidebar from "./checkout-sidebar";
+import { useCheckoutStates } from "@/hooks/use-checkout-states";
+import { useRouter } from "next/navigation";
 type Props = {
     tenantSlug: string;
 }
 
 const CheckoutView = ({tenantSlug}: Props) => {
-    const {productIds,removeProduct,clearAllCarts} = useCart(tenantSlug)
+    const {productIds,removeProduct, clearCart} = useCart(tenantSlug)
+    const router = useRouter()
+    const [states, setStates] = useCheckoutStates()
+
     const trpc = useTRPC();
     const {data, error, isLoading} = useQuery(trpc.checkout.getProducts.queryOptions({ids:productIds}))
+    const purchase = useMutation(trpc.checkout.purchase.mutationOptions({
+        onSuccess: (data) => {
+            window.location.href = data.url
+        },
+        onError: (error) => {
+            if(error.data?.code === 'UNAUTHORIZED') {
+                router.push('/sign-in')
+            }
+            toast.error(error?.message)
+        },
+        onMutate: ()=> {
+            setStates({cancel: false, success: false})
+        }
+    }))
     useEffect(()=> {
         if(!error) return;
         if(error.data?.code === 'NOT_FOUND' ) {
-            clearAllCarts()
+            clearCart()
             toast.warning('Invalid Products found, cart cleared')
         }
-    }, [error, clearAllCarts])
+    }, [error, clearCart])
+    useEffect(()=> {
+        if(states.success) {
+            setStates({cancel: false, success: false})
+            clearCart()
+            router.push('/library')
+        }
+        
+    }, [states.success, router, clearCart, setStates])
     if(isLoading){
         return <div className="flex min-h-[600px] items-center justify-center">
             <Loader2 className="animate-spin size-12" />
@@ -56,7 +83,7 @@ const CheckoutView = ({tenantSlug}: Props) => {
             </div>
             <div className="lg:col-span-3">
                 
-               <CheckoutSidebar total={data?.totalPrice || 0} onCheckout={()=> {}} isCanceled={false} isPending={false} />
+               <CheckoutSidebar total={data?.totalPrice || 0} onPurchase={()=> purchase.mutate({tenantSlug, productIds: productIds})} isCanceled={states.cancel} isPending={purchase.isPending} />
             </div>
 
         </div>
