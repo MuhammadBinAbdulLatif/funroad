@@ -218,6 +218,9 @@ export interface Product {
   id: string;
   tenant?: (string | null) | Tenant;
   name: string;
+  /**
+   * Write a detailed description. This makes your product and the vendor look more professional and dedicated and hence more sales.
+   */
   description?: string | null;
   /**
    * Price in USD

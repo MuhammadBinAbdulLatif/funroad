@@ -9,9 +9,15 @@ import Link from 'next/link';
 import React, { Fragment } from 'react'
 import StarRating from './StarRating';
 import { Button } from '../ui/button';
-import {  LinkIcon, StarIcon } from 'lucide-react';
+import {  LinkIcon, Loader2, StarIcon } from 'lucide-react';
 import { Progress } from '../ui/progress';
-
+import dynamic from 'next/dynamic'
+const CartButton = dynamic(
+    () => import('../Cart/cart-button').then((mod)=> mod.CartButton,), {
+        ssr: false,
+        loading: () => <Loader2 className='animate-spin mx-auto size-4' />
+    }
+)
 type Props = {
     productId: string;
     tenantSlug: string;
@@ -88,9 +94,7 @@ const ProductView = ({productId,tenantSlug}: Props) => {
                     <div className='border-t lg:border-t-0 lg:border-l h-full'>
                         <div className='flex flex-col gap-4 p-6 border-b'>
                             <div className='flex flex-row items-center gap-2'>
-                                <Button variant={'elevated'} className='flex-1 bg-pink-400'>
-                                    Add to cart
-                                </Button>
+                                <CartButton tenantSlug={tenantSlug} productId={productId} />
                                 <Button className='size-12' variant={'elevated'} onClick={()=> {}} disabled={false}>
                                     <LinkIcon />
                                 </Button>
