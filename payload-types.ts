@@ -224,7 +224,14 @@ export interface Product {
    */
   price: number;
   category: string | Category;
+  /**
+   * The image of the product that will be shown on your page.
+   */
   image: string | Media;
+  /**
+   * The image that will be shown on the product-specific page as cover image
+   */
+  cover?: (string | null) | Media;
   refundPolicy?: ('30-day' | '14-day' | '7-day' | '3-day' | '1-day' | 'no-refunds') | null;
   tags: (string | Tag)[];
   updatedAt: string;
@@ -379,6 +386,7 @@ export interface ProductsSelect<T extends boolean = true> {
   price?: T;
   category?: T;
   image?: T;
+  cover?: T;
   refundPolicy?: T;
   tags?: T;
   updatedAt?: T;

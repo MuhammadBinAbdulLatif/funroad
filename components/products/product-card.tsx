@@ -1,3 +1,4 @@
+'use client'
 import { generateTenantUrl } from '@/lib/utils';
 import { StarIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -24,7 +25,7 @@ const ProductCard = ({authorUsername,id,name,price,reviewCount,reviewRating,auth
         router.push(generateTenantUrl(authorUsername))
     }
   return (
-    <Link href={`/${id}`}>
+    <Link href={`${generateTenantUrl(authorUsername)}/products/${id}`}>
     <div className='border hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md bg-white overflow-hidden h-full flex flex-col'>
         <div className='relative aspect-square'>
             <Image alt={name} fill className='object-cover' src={imageUrl || '/auth-background'} />
