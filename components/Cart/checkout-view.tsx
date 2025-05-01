@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart } from "@/hooks/use-cart";
+
 import { generateTenantUrl } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -11,12 +11,16 @@ import { InboxIcon, Loader2 } from "lucide-react";
 import CheckoutSidebar from "./checkout-sidebar";
 import { useCheckoutStates } from "@/hooks/use-checkout-states";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "@/store/use-cart-store";
 type Props = {
     tenantSlug: string;
 }
 
 const CheckoutView = ({tenantSlug}: Props) => {
-    const {productIds,removeProduct, clearCart} = useCart(tenantSlug)
+    const getCartByTenant = useCartStore((state)=> state.getCartByTenant)
+    const removeProduct = useCartStore((state)=> state.removeProduct)
+    const clearCart = useCartStore((state)=> state.clearCart)
+    const productIds = getCartByTenant(tenantSlug)
     const router = useRouter()
     const [states, setStates] = useCheckoutStates()
 
@@ -39,18 +43,18 @@ const CheckoutView = ({tenantSlug}: Props) => {
     useEffect(()=> {
         if(!error) return;
         if(error.data?.code === 'NOT_FOUND' ) {
-            clearCart()
+            clearCart(tenantSlug)
             toast.warning('Invalid Products found, cart cleared')
         }
-    }, [error, clearCart])
+    }, [error, clearCart,tenantSlug])
     useEffect(()=> {
         if(states.success) {
             setStates({cancel: false, success: false})
-            clearCart()
+            clearCart(tenantSlug)
             router.push('/library')
         }
         
-    }, [states.success, router, clearCart, setStates])
+    }, [states.success,tenantSlug, router, clearCart, setStates])
     if(isLoading){
         return <div className="flex min-h-[600px] items-center justify-center">
             <Loader2 className="animate-spin size-12" />
@@ -76,7 +80,7 @@ const CheckoutView = ({tenantSlug}: Props) => {
                           productUrl={`${generateTenantUrl(product.tenant.slug)}/products/${product.id}`}
                           tenantUrl={generateTenantUrl(product.tenant.slug)}
                           price={product.price}
-                          onRemove={()=> removeProduct(product.id)}
+                          onRemove={()=> removeProduct(tenantSlug,product.id)}
                           />
                     ))}
                 </div>
