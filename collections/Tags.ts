@@ -1,3 +1,4 @@
+import { isSuperAdmin } from '@/lib/access'
 import type { CollectionConfig } from 'payload'
 
 export const Tags: CollectionConfig = {
@@ -5,6 +6,12 @@ export const Tags: CollectionConfig = {
   admin: {
     useAsTitle: 'name'
   },
+  access: {
+    read: ()=> true,
+    create: ({req})=> isSuperAdmin(req.user),
+    update: ({req})=> isSuperAdmin(req.user),
+    delete: ({req})=> isSuperAdmin(req.user)
+},
   fields: [
     {
       name: 'name',

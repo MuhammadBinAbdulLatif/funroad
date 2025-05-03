@@ -74,6 +74,7 @@ export interface Config {
     tags: Tag;
     tenants: Tenant;
     orders: Order;
+    reviews: Review;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -91,6 +92,7 @@ export interface Config {
     tags: TagsSelect<false> | TagsSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -166,6 +168,9 @@ export interface Tenant {
    * this is the subdomain for the store (e.g [slug].funroad.com)
    */
   slug: string;
+  /**
+   * Your stripe connect id.
+   */
   stripeAccountId?: string | null;
   /**
    * You cannot create products until you submit your Stripe details
@@ -239,6 +244,10 @@ export interface Product {
   cover?: (string | null) | Media;
   refundPolicy?: ('30-day' | '14-day' | '7-day' | '3-day' | '1-day' | 'no-refunds') | null;
   tags: (string | Tag)[];
+  /**
+   * Protected content only visible to customers after purchase. Add product documentation, downloadable files, getting started guides and bonus materials. Supports markdown formatting.
+   */
+  content?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -263,6 +272,19 @@ export interface Order {
   user: string | User;
   product: string | Product;
   stripeCheckoutSessionId: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: string;
+  description: string;
+  rating: number;
+  product: string | Product;
+  user: string | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -300,6 +322,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'orders';
         value: string | Order;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: string | Review;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -411,6 +437,7 @@ export interface ProductsSelect<T extends boolean = true> {
   cover?: T;
   refundPolicy?: T;
   tags?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -446,6 +473,18 @@ export interface OrdersSelect<T extends boolean = true> {
   user?: T;
   product?: T;
   stripeCheckoutSessionId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  description?: T;
+  rating?: T;
+  product?: T;
+  user?: T;
   updatedAt?: T;
   createdAt?: T;
 }

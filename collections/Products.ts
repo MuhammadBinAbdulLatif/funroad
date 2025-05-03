@@ -1,9 +1,19 @@
+import { isSuperAdmin } from '@/lib/access'
+import { Tenant } from '@/payload-types'
 import type {CollectionConfig} from 'payload'
 
 export const Products: CollectionConfig = {
     slug: 'products',
     admin: {
         useAsTitle: 'name',
+    },
+    access: {
+        read: () => true,
+        create: ({req}) => {
+            if(isSuperAdmin(req.user)) return true
+            const tenant = req.user?.tenants?.[0].tenant as Tenant
+            return Boolean(tenant?.stripeDetailsSubmitted)
+        }
     },
     fields: [
         {
@@ -60,6 +70,12 @@ export const Products: CollectionConfig = {
             relationTo: 'tags',
             hasMany: true,
             required: true
+        }, {
+            name: 'content',
+            type: 'textarea',
+            admin: {
+                description: "Protected content only visible to customers after purchase. Add product documentation, downloadable files, getting started guides and bonus materials. Supports markdown formatting."
+            }
         }
     ],
 }

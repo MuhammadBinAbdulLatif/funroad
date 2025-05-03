@@ -6,12 +6,13 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import StarRating from "./StarRating";
 import { Button } from "../ui/button";
 import { LinkIcon, Loader2, StarIcon } from "lucide-react";
 import { Progress } from "../ui/progress";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 const CartButton = dynamic(
   () => import("../Cart/cart-button").then((mod) => mod.CartButton),
   {
@@ -31,6 +32,7 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
       id: productId,
     })
   );
+  const [isCopied, setIsCopied] = useState(false)
   return (
     <div className="px-4 lg:px-12 py-10">
       <div className="border rounded-md bg-white overflow-hidden">
@@ -80,14 +82,15 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
               </div>
               <div className="hidden lg:flex px-6 py-4 items-center justify-center">
                 <div className="flex items-center gap-1">
-                  <StarRating rating={3} iconClassName="size-5 " />
+                  <StarRating rating={data.reviewRating} iconClassName="size-5 " />
+                  <p className="text-base font-medium">{data.reviewCount} rating {data.reviewCount ===1 ? '': 's'}</p>
                 </div>
               </div>
             </div>
             <div className="block lg:hidden px-6 py-4 items-center justify-center border-b">
               <div className="flex items-center gap-1">
-                <StarRating rating={4} iconClassName="size-4" />
-                <p className="text-base font-medium">{5} ratings</p>
+                <StarRating rating={data.reviewRating} iconClassName="size-4" />
+                
               </div>
             </div>
             <div className="p-6">
@@ -120,8 +123,13 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
                   <Button
                     className="size-12"
                     variant={"elevated"}
-                    onClick={() => {}}
-                    disabled={false}
+                    onClick={() => {
+                      setIsCopied(true)
+                      navigator.clipboard.writeText(window.location.href)
+                      toast.success('URL Copied to Clipboard')
+                      setTimeout(()=> setIsCopied(false) , 1000)
+                    }}
+                    disabled={isCopied}
                   >
                     <LinkIcon />
                   </Button>
@@ -137,8 +145,8 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
                   <h3 className="text-xl font-medium">Ratings</h3>
                   <div className="flex items-center gap-x-1 font-medium">
                     <StarIcon className="size-4 fill-black" />
-                    <p>({5})</p>
-                    <p className="text-base">{5} ratings</p>
+                    <p>({data.reviewRating})</p>
+                    <p className="text-base">{data.reviewCount} ratings</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-[auto_1fr_auto] gap-3 mt-4">
@@ -147,8 +155,8 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
                       <div className="font-medium">
                         {stars} {stars === 1 ? "star" : "stars"}
                       </div>
-                      <Progress value={50} className="h-[1lh]" />
-                      <div className="font-medium">{50}%</div>
+                      <Progress value={data.ratingDistribution[stars]} className="h-[1lh]" />
+                      <div className="font-medium">{data.ratingDistribution[stars]}%</div>
                     </Fragment>
                   ))}
                 </div>

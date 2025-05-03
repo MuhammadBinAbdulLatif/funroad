@@ -15,9 +15,10 @@ type Props = {
     reviewRating: number;
     reviewCount: number;
     price: number; 
+    redirectLink?: string
 }
 
-const ProductCard = ({authorUsername,id,name,price,reviewCount,reviewRating,authorImageUrl,imageUrl}: Props) => {
+const ProductCard = ({authorUsername,redirectLink,id,name,price,reviewCount,reviewRating,authorImageUrl,imageUrl}: Props) => {
     const router = useRouter()
     const handleUserClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -25,7 +26,7 @@ const ProductCard = ({authorUsername,id,name,price,reviewCount,reviewRating,auth
         router.push(generateTenantUrl(authorUsername))
     }
   return (
-    <Link href={`${generateTenantUrl(authorUsername)}/products/${id}`}>
+    <Link href={redirectLink ? `${redirectLink}/${id}` : `${generateTenantUrl(authorUsername)}/products/${id}`}>
     <div className='border hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md bg-white overflow-hidden h-full flex flex-col'>
         <div className='relative aspect-square'>
             <Image alt={name} fill className='object-cover' src={imageUrl || '/auth-background'} />

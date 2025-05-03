@@ -32,13 +32,14 @@ const ProductList = () => {
        {data?.pages.flatMap((page) =>
   page.docs.map((product) => (
     <ProductCard 
+    redirectLink={'/library'}
       id={product.id} 
       name={product.name} 
       imageUrl={product.image?.url} 
       authorUsername={product.tenant?.slug} 
       authorImageUrl={product.tenant?.image?.url} 
-      reviewRating={3} 
-      reviewCount={5} 
+      reviewRating={product.reviewRating} 
+      reviewCount={product.reviewCount} 
       price={product.price} 
       key={product.id} 
     />

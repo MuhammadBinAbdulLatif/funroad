@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
 import React from 'react'
+import { redirect } from 'next/navigation';
 
 async function page() {
     const queryClient = getQueryClient();
@@ -16,6 +17,10 @@ async function page() {
         void queryClient.prefetchInfiniteQuery(trpc.library.getMany.infiniteQueryOptions({
             limit: 10
         }));
+        
+    }
+    if(!session.user) {
+        return redirect('/sign-in')
     }
 
     return (

@@ -3,7 +3,7 @@
 
 import { generateTenantUrl } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import {toast} from 'sonner'
 import CheckoutItem from "./checkout-item";
@@ -26,6 +26,8 @@ const CheckoutView = ({tenantSlug}: Props) => {
 
     const trpc = useTRPC();
     const {data, error, isLoading} = useQuery(trpc.checkout.getProducts.queryOptions({ids:productIds}))
+    const queryClient = useQueryClient()
+
     const purchase = useMutation(trpc.checkout.purchase.mutationOptions({
         onSuccess: (data) => {
             window.location.href = data.url
@@ -51,10 +53,11 @@ const CheckoutView = ({tenantSlug}: Props) => {
         if(states.success) {
             setStates({cancel: false, success: false})
             clearCart(tenantSlug)
+            queryClient.invalidateQueries(trpc.library.getMany.infiniteQueryFilter())
             router.push('/library')
         }
         
-    }, [states.success,tenantSlug, router, clearCart, setStates])
+    }, [states.success,tenantSlug, router, clearCart, setStates, queryClient, trpc.library.getMany])
     if(isLoading){
         return <div className="flex min-h-[600px] items-center justify-center">
             <Loader2 className="animate-spin size-12" />
