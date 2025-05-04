@@ -14,7 +14,7 @@ export const ReviewsRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const product = await ctx.db.findByID({
-        collection: 'products',
+        collection: 'products', 
         id: input.productId 
       })
       if(!product) {

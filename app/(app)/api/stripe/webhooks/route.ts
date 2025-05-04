@@ -60,6 +60,8 @@ export async function POST(req: Request) {
                         session.id,
                         {
                             expand: ['line_items.data.price.product']
+                        }, {
+                            stripeAccount: event.account
                         }
                     )
 
@@ -79,6 +81,7 @@ export async function POST(req: Request) {
                             collection: 'orders',
                             data: {
                                 stripeCheckoutSessionId: session.id,
+                                stripeAccountId: event.account,
                                 user: user.id,
                                 product: item.price.product.metadata.id,
                                 name: item.price.product.name
@@ -92,6 +95,22 @@ export async function POST(req: Request) {
                         { message: 'Orders created successfully' },
                         { status: 200 }
                     )
+                }
+                case 'account.updated': {
+                    const data = event.data.object as Stripe.Account;
+                    console.log('Entered the case', data.id)
+                    await payload.update({
+                        collection: 'tenants',
+                        where: {
+                            stripeAccountId: {
+                                equals: data.id
+                            }
+                        },
+                        data: {
+                            stripeDetailsSubmitted: data.details_submitted
+                        }
+                    })
+                    break;
                 }
                 default:
                     return NextResponse.json(

@@ -56,7 +56,17 @@ export const checkoutRouter = createTRPCRouter({
                 message: 'Tenant not found'
             })
          }
-         // TODO: throw error if there are no stripe details for the user 
+         if(!tenant.stripeDetailsSubmitted){
+            throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Tenant not allowed to sell products'
+            })
+         }
+         const totalAmount = products.docs.reduce(
+            (acc,item) => acc + item.price * 100, 0
+         )
+         const platformFeeAmount = Math.round(
+            totalAmount * 0.1      )
          const lineItems:Stripe.Checkout.SessionCreateParams.LineItem[] = products.docs.map((product) => ({
             quantity:1,
             price_data: {
@@ -81,7 +91,12 @@ export const checkoutRouter = createTRPCRouter({
             line_items: lineItems,
             metadata: {
                 userId: ctx.session.user.id
-            } as CheckoutMetaData
+            } as CheckoutMetaData,
+            payment_intent_data : {
+                application_fee_amount : platformFeeAmount
+            }
+         }, {
+            stripeAccount: tenant.stripeAccountId
          })
          if(!checkout.url) {
             throw new TRPCError({

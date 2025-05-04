@@ -1,9 +1,10 @@
 import { getPayload } from "payload";
 import config  from "./payload.config"
 import { categories } from "./constants/categories";
+import { stripe } from "./lib/stripe";
 
 
-export const seedTags = async () => {
+const seedTags = async () => {
     const payload = await getPayload({config})
   const tags = [
     'New',
@@ -98,18 +99,24 @@ const seed = async () => {
 
 const createAdmin = async () => {
   const payload = await getPayload({config})
+  const account = await stripe.accounts.create({})
   const admin = await payload.create({
     collection: 'tenants',
     data: {
       name: 'admin',
       slug: 'admin',
-      stripeAccountId: 'test',
+      stripeAccountId: account.id,
       stripeDetailsSubmitted: false
     }
   })
- await payload.update({
+ await payload.create({
     collection: 'users',
     data: {
+      email: 'helloworld@demo.com',
+      password: 'helloworld',
+      roles: ['super-admin'],
+      username: 'helloworld'
+      ,
       tenants: [
         {
           id: admin.id,
@@ -117,13 +124,11 @@ const createAdmin = async () => {
         }
       ]
     },
-    where: {
-      email: {
-        equals: 'helloworld@demo.com'
-      }
-    }
+   
   });
   
 }
 await createAdmin()
+await seed()
+await seedTags()
 process.exit(0)

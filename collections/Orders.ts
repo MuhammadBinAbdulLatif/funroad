@@ -41,6 +41,16 @@ export const  Orders:CollectionConfig = {
                 update: () => false,
                 create: () => false
             }
+        },
+        {
+            name: 'stripeAccountId',
+            type: 'text',
+            required: true,
+            access: {
+                read: ()=> true,
+                update: () => false,
+                create: () => false
+            }
         }
     ]
 }
