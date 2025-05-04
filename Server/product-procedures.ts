@@ -3,6 +3,7 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { Sort, Where } from "payload";
 import { z } from "zod";
 import { headers as getHeaders } from "next/headers";
+import { TRPCError } from "@trpc/server";
 function getAllSubcategorySlugs(category: Category): string[] {
   let slugs: string[] = [];
   if (category.subcategories && Array.isArray(category.subcategories)) {
@@ -34,6 +35,12 @@ export const productsRouter = createTRPCRouter({
       }
     })
     let isPurchased = false
+    if(product.isArchived) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Product not found'
+      })
+    }
     if(session.user) {
       const ordersData = await ctx.db.find({
         collection: 'orders',
@@ -112,7 +119,11 @@ export const productsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const where: Where = {};
+      const where: Where = {
+        isArchived: {
+          not_equals: true
+        }
+      };
       console.log('inp', input)
       let sort:Sort = '-createdAt'
       if(input.sort === 'trending') {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import ReviewSidebar from "./review-sidebar";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 interface Props {
     productId: string
 }
@@ -36,7 +37,7 @@ function ProductView({productId}:Props) {
                 <ReviewSidebar productId={productId} />
             </div>
             <div className="lg:col-span-5">
-              {data.content ? <p>{data.content}</p>: <p className="font-medium italic text-muted-foreground">
+              {data.content ? <RichText data={data.content} />: <p className="font-medium italic text-muted-foreground">
                     No special content
                 </p> }
                 

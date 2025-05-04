@@ -13,6 +13,7 @@ import { LinkIcon, Loader2, StarIcon } from "lucide-react";
 import { Progress } from "../ui/progress";
 import dynamic from "next/dynamic";
 import { toast } from "sonner";
+import { RichText} from '@payloadcms/richtext-lexical/react'
 const CartButton = dynamic(
   () => import("../Cart/cart-button").then((mod) => mod.CartButton),
   {
@@ -95,7 +96,7 @@ const ProductView = ({ productId, tenantSlug }: Props) => {
             </div>
             <div className="p-6">
               {data.description ? (
-                <p>{data.description}</p>
+                <RichText data={data.description} />
               ) : (
                 <p className="font-medium text-muted-foreground italic">
                   No description provided

@@ -81,7 +81,7 @@ export async function POST(req: Request) {
                             collection: 'orders',
                             data: {
                                 stripeCheckoutSessionId: session.id,
-                                stripeAccountId: event.account,
+                                stripeAccountId: event.account as string,
                                 user: user.id,
                                 product: item.price.product.metadata.id,
                                 name: item.price.product.name

@@ -230,7 +230,21 @@ export interface Product {
   /**
    * Write a detailed description. This makes your product and the vendor look more professional and dedicated and hence more sales.
    */
-  description?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Price in USD
    */
@@ -249,7 +263,25 @@ export interface Product {
   /**
    * Protected content only visible to customers after purchase. Add product documentation, downloadable files, getting started guides and bonus materials. Supports markdown formatting.
    */
-  content?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * If checked, the product will be archived
+   */
+  isArchived?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -441,6 +473,7 @@ export interface ProductsSelect<T extends boolean = true> {
   refundPolicy?: T;
   tags?: T;
   content?: T;
+  isArchived?: T;
   updatedAt?: T;
   createdAt?: T;
 }
